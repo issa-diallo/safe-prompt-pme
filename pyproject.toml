@@ -11,7 +11,9 @@ requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Issa Diallo", email = "contact@issa-diallo.com" }]
 keywords = ["pii", "anonymization", "llm", "privacy", "pme", "python"]
-dependencies = []
+dependencies = [
+  "streamlit>=1.40",
+]
 
 [project.optional-dependencies]
 dev = [
