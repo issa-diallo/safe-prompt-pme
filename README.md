@@ -134,9 +134,9 @@ Fonctions attendues :
 - [x] créer une table locale token -> valeur réelle ;
 - [x] réinjecter les vraies valeurs dans une réponse ;
 - [x] tester automatiquement les comportements critiques ;
-- [ ] ajouter une interface Streamlit ;
-- [ ] connecter un premier LLM ;
-- [ ] afficher les 4 zones de démonstration : original, données détectées, version LLM, réponse finale.
+- [x] ajouter une interface Streamlit ;
+- [x] connecter un client LLM de démo local, sans réseau ;
+- [x] afficher les zones de démonstration : original, données détectées, version LLM, réponse finale.
 
 ### MVP 2 — Interface de validation humaine
 
@@ -200,6 +200,23 @@ source .venv/bin/activate
 pip install -e '.[dev]'
 pytest
 ```
+
+## Lancer l'interface MVP
+
+```bash
+streamlit run src/safe_prompt_pme/app.py
+```
+
+L'interface affiche :
+
+1. le texte original ;
+2. la version anonymisée envoyée au LLM ;
+3. la table locale des tokens ;
+4. la réponse LLM simulée ;
+5. la réponse finale après réinjection locale.
+
+Le client LLM de cette première démo est volontairement simulé et sans réseau.
+Cela permet de présenter la valeur métier sans clé API et sans fuite de données.
 
 ---
 

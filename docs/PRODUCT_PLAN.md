@@ -67,12 +67,16 @@ Option MVP : Streamlit.
 
 ## Démo MVP recommandée
 
-Interface avec 4 panneaux :
+Interface avec 5 panneaux :
 
 1. **Email original**
-2. **Données détectées**
-3. **Version envoyée à l'IA**
-4. **Réponse finale après réinjection**
+2. **Version envoyée à l'IA**
+3. **Données détectées dans la table locale**
+4. **Réponse LLM simulée**
+5. **Réponse finale après réinjection locale**
+
+Statut : une première interface Streamlit existe dans `src/safe_prompt_pme/app.py`.
+Elle utilise un client LLM local simulé pour éviter toute fuite de données pendant la démo.
 
 ## Critères d'acceptation du MVP 1
 
