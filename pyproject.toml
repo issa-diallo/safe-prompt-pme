@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "safe-prompt-pme"
+version = "0.1.0"
+description = "Workflow Python d'anonymisation avant LLM pour emails, documents et CRM de PME."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Issa Diallo", email = "contact@issa-diallo.com" }]
+keywords = ["pii", "anonymization", "llm", "privacy", "pme", "python"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.8.0",
+  "mypy>=1.13",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/safe_prompt_pme"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=safe_prompt_pme --cov-report=term-missing --cov-fail-under=95"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
