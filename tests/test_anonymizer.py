@@ -81,3 +81,21 @@ def test_anonymize_french_business_identifiers() -> None:
     assert "752 631 127 00046" not in result.text
     assert "06 03 59 86 00" not in result.text
     assert "FR76 3000 6000 0112 3456 7890 189" not in result.text
+
+def test_anonymize_common_business_reference_variants() -> None:
+    original = (
+        "Merci d'envoyer la facture FAC-2026-00125 de 1 240,50 EUR "
+        "à jean.dupont@sarl-martin.fr, téléphone +33 6 12 34 56 78. "
+        "Le devis DEV-24-778 est aussi à relancer."
+    )
+
+    result = anonymize_text(original)
+
+    assert "[FACTURE_1]" in result.text
+    assert "[MONTANT_1]" in result.text
+    assert "[TELEPHONE_1]" in result.text
+    assert "[DEVIS_1]" in result.text
+    assert "FAC-2026-00125" not in result.text
+    assert "1 240,50 EUR" not in result.text
+    assert "+33 6 12 34 56 78" not in result.text
+    assert "DEV-24-778" not in result.text

@@ -20,11 +20,13 @@ class SensitiveDataPattern:
 
 
 EMAIL_PATTERN = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
-PHONE_FR_PATTERN = re.compile(r"(?<!\d)(?:\+33|0)[1-9](?:[ .-]?\d{2}){4}(?!\d)")
-INVOICE_PATTERN = re.compile(r"\bF-\d{4}-\d{3,}\b", re.IGNORECASE)
-QUOTE_PATTERN = re.compile(r"\bD-\d{4}-\d{3,}\b", re.IGNORECASE)
+PHONE_FR_PATTERN = re.compile(
+    r"(?<!\d)(?:(?:\+33[ .-]?)|0)[1-9](?:[ .-]?\d{2}){4}(?!\d)"
+)
+INVOICE_PATTERN = re.compile(r"\b(?:F|FAC)-\d{2,4}-\d{3,}\b", re.IGNORECASE)
+QUOTE_PATTERN = re.compile(r"\b(?:D|DEV)-\d{2,4}-\d{3,}\b", re.IGNORECASE)
 AMOUNT_EUR_PATTERN = re.compile(
-    r"\b\d{1,3}(?:[ .]\d{3})*(?:,\d{2})?\s?€(?:\s?HT|\s?TTC)?(?=\W|$)"
+    r"\b\d{1,3}(?:[ .]\d{3})*(?:,\d{2})?\s?(?:€|EUR)(?:\s?HT|\s?TTC)?(?=\W|$)"
 )
 SIRET_PATTERN = re.compile(r"\b\d{3}[ .]?\d{3}[ .]?\d{3}[ .]?\d{5}\b")
 IBAN_FR_PATTERN = re.compile(r"\bFR\d{2}(?:[ ]?[A-Z0-9]){23}\b", re.IGNORECASE)

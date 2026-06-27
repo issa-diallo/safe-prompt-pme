@@ -99,6 +99,43 @@ Anonymisation locale + transport chiffré + validation humaine
 
 ---
 
+## Stratégie d'accès aux LLM
+
+Safe Prompt PME doit rester une couche de protection et de contrôle, sans imposer
+un fournisseur IA unique ni faire porter des coûts variables imprévisibles aux
+freelances et petites entreprises.
+
+La stratégie produit est progressive :
+
+1. **MVP : anonymisation + copier-coller + BYOK OpenAI/Anthropic/Mistral**
+   - Safe Prompt PME anonymise le texte localement.
+   - L'utilisateur peut copier le prompt sécurisé vers ChatGPT, Claude ou un autre assistant.
+   - L'utilisateur peut aussi connecter sa propre clé API OpenAI, Anthropic ou Mistral.
+   - Le coût des tokens reste maîtrisé par l'utilisateur, via son propre compte fournisseur.
+
+2. **V2 : providers locaux Ollama / LM Studio**
+   - Ajout d'un mode local pour utiliser des modèles installés sur la machine de l'utilisateur.
+   - Aucun contenu anonymisé n'a besoin de quitter le poste ou le réseau local.
+   - Ce mode vise les utilisateurs qui privilégient la confidentialité ou veulent éviter les coûts API.
+
+3. **V3 : plan avec tokens inclus**
+   - Safe Prompt PME pourra proposer une offre plus simple pour les utilisateurs non techniques.
+   - L'abonnement inclura alors un quota d'utilisation LLM.
+   - Cette option devra intégrer quotas, limites d'usage, suivi des coûts et prévention des abus.
+
+4. **V4 : connecteur MCP / ChatGPT App**
+   - Safe Prompt PME pourra être exposé comme outil de sécurisation appelé depuis ChatGPT ou Claude.
+   - L'assistant envoie le texte à sécuriser vers Safe Prompt PME, qui retourne une version anonymisée.
+   - Ce mode positionne Safe Prompt PME comme un pare-feu IA réutilisable dans les assistants existants.
+
+Principe important : Safe Prompt PME ne doit pas promettre d'utiliser directement
+l'abonnement ChatGPT ou Claude d'un utilisateur comme une API applicative, sauf
+si le fournisseur propose officiellement ce mode d'intégration. Pour le MVP, les
+options réalistes sont donc le copier-coller, les clés API utilisateur et les
+modèles locaux.
+
+---
+
 ## Données sensibles à traiter
 
 Le MVP démarre avec des règles simples :
@@ -124,11 +161,13 @@ La suite du projet pourra ajouter :
 
 ## Étapes du MVP
 
-### MVP 1 — Démo texte / email
+### V1 — Démo utilisable avec clé API optionnelle
 
-Objectif : prouver le workflow sur un email collé dans une interface simple.
+Objectif : prouver le workflow sur un email collé dans une interface simple,
+avec un mode sans réseau pour les démonstrations et un mode BYOK pour tester
+un vrai provider compatible OpenAI.
 
-Fonctions attendues :
+Fonctions incluses :
 
 - [x] anonymiser un texte ;
 - [x] créer une table locale token -> valeur réelle ;
@@ -136,13 +175,19 @@ Fonctions attendues :
 - [x] tester automatiquement les comportements critiques ;
 - [x] ajouter une interface Streamlit ;
 - [x] connecter un client LLM de démo local, sans réseau ;
-- [x] afficher les zones de démonstration : original, données détectées, version LLM, réponse finale.
+- [x] connecter un provider OpenAI compatible avec clé API utilisateur ;
+- [x] saisir, masquer, enregistrer en session et effacer la clé API dans l'UI ;
+- [x] afficher les zones : original, données détectées, version LLM, réponse LLM, réponse finale ;
+- [x] permettre d'accepter, modifier ou rejeter la réponse finale ;
+- [x] garder un journal local de session sans exposer le contenu sensible.
 
-### MVP 2 — Interface de validation humaine
+### Prochaines étapes produit
 
-- [ ] afficher la réponse finale à valider ;
-- [ ] permettre d'accepter, modifier ou rejeter ;
-- [ ] garder un journal local des décisions sans exposer les données inutilement.
+- [ ] ajouter Anthropic et Mistral comme providers dédiés ;
+- [ ] ajouter Ollama / LM Studio pour le mode local ;
+- [ ] persister un journal chiffré optionnel côté poste ;
+- [ ] lire une boîte email ou un export CRM ;
+- [ ] générer un brouillon métier sans envoi automatique.
 
 ### MVP 3 — Intégration email / CRM
 
@@ -201,22 +246,25 @@ pip install -e '.[dev]'
 pytest
 ```
 
-## Lancer l'interface MVP
+## Lancer l'interface v1
 
 ```bash
 streamlit run src/safe_prompt_pme/app.py
 ```
 
-L'interface affiche :
+L'interface propose deux modes :
 
-1. le texte original ;
-2. la version anonymisée envoyée au LLM ;
-3. la table locale des tokens ;
-4. la réponse LLM simulée ;
-5. la réponse finale après réinjection locale.
+1. **Démo locale** : aucun appel réseau, aucune clé API requise ;
+2. **OpenAI compatible** : l'utilisateur colle sa propre clé API, choisit le modèle
+   et peut modifier l'URL d'API avancée.
 
-Le client LLM de cette première démo est volontairement simulé et sans réseau.
-Cela permet de présenter la valeur métier sans clé API et sans fuite de données.
+La clé API est saisie dans un champ secret, masquée dans l'interface, conservée
+en session Streamlit et effaçable depuis la barre latérale. Elle n'est pas écrite
+dans le dépôt ni dans un fichier de configuration.
+
+Dans tous les cas, le provider reçoit uniquement la version anonymisée. La table
+locale des tokens reste côté application et sert seulement à reconstruire la
+réponse finale avant validation humaine.
 
 ---
 

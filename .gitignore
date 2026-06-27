@@ -12,3 +12,6 @@ build/
 .env
 .env.*
 !.env.example
+.streamlit/
+output/
+.playwright-cli/
